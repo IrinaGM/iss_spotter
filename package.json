@@ -1,0 +1,22 @@
+{
+  "name": "iss_spotter",
+  "version": "1.0.0",
+  "description": "App that returns the next few passes of ISS Spaceship for user's location",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IrinaGM/iss_spotter.git"
+  },
+  "author": "IrinaGM",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IrinaGM/iss_spotter/issues"
+  },
+  "homepage": "https://github.com/IrinaGM/iss_spotter#readme",
+  "dependencies": {
+    "request": "^2.88.2"
+  }
+}
