@@ -22,7 +22,6 @@ const fetchMyIP = (callback) => {
 
     const IP = JSON.parse(body)["ip"];
     callback(null, IP);
-    return;
   });
 };
 
