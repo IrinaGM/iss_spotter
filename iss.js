@@ -1,11 +1,11 @@
 // contains most of the logic for fetching the data from each API endpoint.
 const request = require("request");
-const { URL_IPIFY, URL_IPWHO } = require("./constants");
+const { URL_IPIFY, URL_IPWHO, URL_ISS_FLYOVER } = require("./constants");
 
 /**
  * @function fetchMyIP - Makes a single API request to retrieve the user's IP address.
  * @param {callback} callback- pass back an error or the IP string
- * @returns {string} - IP address Example: "162.245.144.188", null if error
+ * @returns {string} - (via callback) IP address Example: "162.245.144.188", null if error
  */
 
 const fetchMyIP = (callback) => {
@@ -29,7 +29,7 @@ const fetchMyIP = (callback) => {
  * @function fetchCoordsByIP - fetch GEO coordinates based on an IP address.
  * @param {string} ip
  * @param {callback}
- * @returns {string} - returns the latitude and longitude for it
+ * @returns {object} - (via callback) the latitude and longitude for that IP. Example: { latitude: '49.27670', longitude: '-123.13000' }
  */
 
 const fetchCoordsByIP = (ip, callback) => {
@@ -42,7 +42,7 @@ const fetchCoordsByIP = (ip, callback) => {
       }
 
       if (response.statusCode !== 200) {
-        const msg = `Status Code ${response.statusCode} when fetching IP. Response: ${body}`;
+        const msg = `Status Code ${response.statusCode} when fetching coordinates for IP. Response: ${body}`;
         callback(Error(msg), null);
         return;
       }
@@ -53,4 +53,32 @@ const fetchCoordsByIP = (ip, callback) => {
   );
 };
 
-module.exports = { fetchMyIP, fetchCoordsByIP };
+/**
+ * @function fetchISSFlyOverTimes - fetch ISS passes for given coordinates.
+ * @param {object} coords - the coordinates to get the ISS passes for. Example: { latitude: '49.27670', longitude: '-123.13000' }
+ * @param {callback}
+ * @returns {array} - (via callback) passes. Example: [{ risetime: 146820455,"duration": 545 },...]
+ */
+
+const fetchISSFlyOverTimes = (coords, callback) => {
+  request(
+    `${URL_ISS_FLYOVER}lat=${coords.latitude}&lon=${coords.longitude}`,
+    (error, response, body) => {
+      if (error) {
+        callback(error, null);
+        return;
+      }
+
+      if (response.statusCode !== 200) {
+        const msg = `Status Code ${response.statusCode} when fetching flyovers. Response: ${body}`;
+        callback(Error(msg), null);
+        return;
+      }
+
+      const passes = JSON.parse(body).response;
+      callback(null, passes);
+    }
+  );
+};
+
+module.exports = { fetchMyIP, fetchCoordsByIP, fetchISSFlyOverTimes };
