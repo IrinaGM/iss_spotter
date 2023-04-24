@@ -81,4 +81,19 @@ const fetchISSFlyOverTimes = (coords, callback) => {
   );
 };
 
-module.exports = { fetchMyIP, fetchCoordsByIP, fetchISSFlyOverTimes };
+/**
+ * @function nextISSTimesForMyLocation - Orchestrates multiple API requests in order to determine the next 5 upcoming ISS fly overs for the user's current location.
+ * @param {callback} - for handling the resulting data or error.
+ * @returns {array} - (via Callback): An error, if any (nullable) or the fly-over times as an array (null if error). Example: [ { risetime: <number>, duration: <number> }, ... ]
+ */
+
+const nextISSTimesForMyLocation = (callback) => {
+  // empty for now
+};
+
+module.exports = {
+  fetchMyIP,
+  fetchCoordsByIP,
+  fetchISSFlyOverTimes,
+  nextISSTimesForMyLocation,
+};
