@@ -82,6 +82,20 @@ const fetchISSFlyOverTimes = (coords, callback) => {
 };
 
 /**
+ * @function printTimes - Prints the time and the duration of the flyover in specific format.
+ * @param {array} passTimes - the array of objects to format. Example: [{ risetime: 146820455,"duration": 545 },...]
+ */
+
+const printTimes = (passTimes) => {
+  for (const pass of passTimes) {
+    const datetime = new Date(0);
+    datetime.setUTCSeconds(pass.risetime);
+    const duration = pass.duration;
+    console.log(`Next pass at ${datetime} for ${duration} seconds!`);
+  }
+};
+
+/**
  * @function nextISSTimesForMyLocation - Orchestrates multiple API requests in order to determine the next 5 upcoming ISS fly overs for the user's current location.
  * @param {callback} - for handling the resulting data or error.
  * @returns {array} - (via Callback): An error, if any (nullable) or the fly-over times as an array (null if error). Example: [ { risetime: <number>, duration: <number> }, ... ]
@@ -90,23 +104,23 @@ const fetchISSFlyOverTimes = (coords, callback) => {
 const nextISSTimesForMyLocation = (callback) => {
   fetchMyIP((error, ip) => {
     if (error) {
-      console.log("It didn't work!", error);
+      callback(error, null);
       return;
     }
 
     fetchCoordsByIP(ip, (error, coordinates) => {
       if (error) {
-        console.log("It didn't work!", error);
+        callback(error, null);
         return;
       }
 
       fetchISSFlyOverTimes(coordinates, (error, passTimes) => {
         if (error) {
-          console.log("It didn't work!", error);
+          callback(error, null);
           return;
         }
 
-        console.log("It worked! Returned Flyover times:", passTimes);
+        callback(null, passTimes);
       });
     });
   });
@@ -116,5 +130,6 @@ module.exports = {
   fetchMyIP,
   fetchCoordsByIP,
   fetchISSFlyOverTimes,
+  printTimes,
   nextISSTimesForMyLocation,
 };
